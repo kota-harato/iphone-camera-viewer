@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# タイトル
 st.title("カメラアプリ")
 
 # カメラのキャプチャ
@@ -12,6 +11,7 @@ def capture_image():
     cam_placeholder = st.empty()
     
     if run:
+        # Webカメラの映像を表示する
         cap = cv2.VideoCapture(0)  # カメラを起動
 
         if not cap.isOpened():
@@ -19,9 +19,10 @@ def capture_image():
             return None
 
         ret, frame = cap.read()  # 画像をキャプチャ
-
         if ret:
-            img_placeholder.image(frame, channels="BGR")  # 画像を表示
+            # OpenCVのBGRからRGBに変換
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            cam_placeholder.image(frame, channels="RGB")  # 画像を表示
 
         cap.release()
 
@@ -37,3 +38,5 @@ uploaded_file = st.file_uploader("画像をアップロード", type=["png", "jp
 if uploaded_file is not None:
     img = Image.open(uploaded_file)
     st.image(img, caption="アップロードされた画像")
+
+st.write("iPhoneのSafariを使っている場合、カメラのアクセスを許可する必要があります。")
